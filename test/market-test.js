@@ -40,10 +40,13 @@ describe("NFT Market", function () {
       expect(await listingPrice).to.equal("25000000000000000");
     });
 
-    // it("Should create Market Item", async function () {
-    //   await market.createToken("https://www.mytokenlocation.com");
-    //   await market.createToken("https://www.mytokenlocation2.com");
-    // expect(create )
-    // });
+    it("Should create two NFTs", async function () {
+      let nftToken = await nft.createToken("https://www.mytokenlocation.com");
+      let nftToken2 = await nft.createToken("https://www.mytokenlocation2.com");
+      expect(await nftToken.value.toString()).to.equal("0");
+      expect(await nftToken2.value.toString()).to.equal("0");
+      expect(await nftToken.from).to.equal(nft.signer.address);
+      expect(await nftToken2.from).to.equal(nft.signer.address);
+    });
   });
 });
