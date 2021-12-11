@@ -5,8 +5,12 @@ describe("NFT Market", function () {
   let market;
   let nft;
   let owner;
-  let addr1;
-  let addr2;
+  let listingPrice;
+  let nftContractAddress;
+  let nftToken;
+  let nftToken2;
+  // Set action price
+  const auctionPrice = ethers.utils.parseUnits("1", "ether");
 
   beforeEach(async function () {
     // Set the NFTMarket Contract
@@ -20,7 +24,11 @@ describe("NFT Market", function () {
     const NFT = await ethers.getContractFactory("NFT");
     nft = await NFT.deploy(marketAddress);
     await nft.deployed();
-    const nftContractAddress = nft.address;
+    nftContractAddress = nft.address;
+
+    // Create two test NFTs
+    nftToken = await nft.createToken("https://www.mytokenlocation.com");
+    nftToken2 = await nft.createToken("https://www.mytokenlocation2.com");
   });
 
   describe("Deployment of contracts", function () {
@@ -34,19 +42,40 @@ describe("NFT Market", function () {
 
   describe("Testing functions", function () {
     it("Should list prices", async function () {
-      let listingPrice = await market.getListingPrice();
+      listingPrice = await market.getListingPrice();
       listingPrice = listingPrice.toString();
       expect(await listingPrice).to.be.a("string");
       expect(await listingPrice).to.equal("25000000000000000");
     });
 
     it("Should create two NFTs", async function () {
-      let nftToken = await nft.createToken("https://www.mytokenlocation.com");
-      let nftToken2 = await nft.createToken("https://www.mytokenlocation2.com");
       expect(await nftToken.value.toString()).to.equal("0");
       expect(await nftToken2.value.toString()).to.equal("0");
       expect(await nftToken.from).to.equal(nft.signer.address);
       expect(await nftToken2.from).to.equal(nft.signer.address);
+    });
+
+    it("Should create two NFT Market Items", async function () {
+      let item1 = await market.createMarketItem(
+        nftContractAddress,
+        1,
+        auctionPrice,
+        {
+          value: listingPrice,
+        }
+      );
+      let item2 = await market.createMarketItem(
+        nftContractAddress,
+        2,
+        auctionPrice,
+        {
+          value: listingPrice,
+        }
+      );
+      console.log(marketAddress);
+      console.log(nftContractAddress);
+      expect(await item1.from).to.equal(nft.signer.address);
+      expect(await item2.from).to.equal(nft.signer.address);
     });
   });
 });
