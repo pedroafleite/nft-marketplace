@@ -17,10 +17,13 @@ if (process.env.NEXT_PUBLIC_WORKSPACE_URL) {
 export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+
   useEffect(() => {
     loadNFTs();
   }, []);
+
   async function loadNFTs() {
+    // const provider = new ethers.providers.JsonRpcProvider();
     const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
