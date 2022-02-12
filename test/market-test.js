@@ -9,6 +9,7 @@ describe("NFT Market", function () {
   let nftContractAddress;
   let nftToken;
   let nftToken2;
+  let marketAddress;
   // Set action price
   const auctionPrice = ethers.utils.parseUnits("1", "ether");
 
@@ -18,7 +19,7 @@ describe("NFT Market", function () {
     [owner, addr1, addr2] = await ethers.getSigners();
     market = await Market.deploy();
     await market.deployed();
-    const marketAddress = market.address;
+    marketAddress = market.address;
 
     // Set the NFT Contract
     const NFT = await ethers.getContractFactory("NFT");
@@ -45,7 +46,7 @@ describe("NFT Market", function () {
       listingPrice = await market.getListingPrice();
       listingPrice = listingPrice.toString();
       expect(await listingPrice).to.be.a("string");
-      expect(await listingPrice).to.equal("25000000000000000");
+      expect(await listingPrice).to.equal("2500000000");
     });
 
     it("Should create two NFTs", async function () {
