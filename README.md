@@ -20,7 +20,7 @@
 
 `npx hardhat node`
 
-`npx hardhat run scripts/deploy.js --network mumbai`
+`npx hardhat run scripts/deploy.js --network localhost`
 
 nftMarket deployed to: 0x39bfCA66c3cfF4f10F79df0e12544Fe5Ba571801
 
