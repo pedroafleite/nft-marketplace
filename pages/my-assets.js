@@ -52,6 +52,25 @@ export default function MyAssets() {
   }
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="py-10 px-20 text-3xl flex justify-center">No assets owned</h1>;
+
+  async function createMarket() {
+    const { name, description, price } = formInput;
+    if (!name || !description || !price || !fileUrl) return;
+    /* first, upload to IPFS */
+    const data = JSON.stringify({
+      name,
+      description,
+      image: fileUrl,
+    });
+    try {
+      const added = await client.add(data);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
+      createSale(url);
+    } catch (error) {
+      console.log("Error uploading file: ", error);
+    }
+  }
   return (
     <div className="flex justify-center">
       <div className="p-4">
@@ -60,9 +79,15 @@ export default function MyAssets() {
             <div key={i} className="border shadow rounded-xl overflow-hidden">
               <img src={nft.image} className="rounded" />
               <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl mb-4 font-bold text-white">
                   Price - {nft.price} Eth
                 </p>
+                <button
+                  className="w-full bg-teal-500 text-white font-bold py-2 px-12 rounded"
+                  onClick={() => createMarket(nft)}
+                >
+                  Sell
+                </button>
               </div>
             </div>
           ))}
