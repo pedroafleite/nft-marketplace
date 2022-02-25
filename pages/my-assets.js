@@ -11,6 +11,12 @@ import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 
 export default function MyAssets() {
   const [nfts, setNfts] = useState([]);
+  const [fileUrl, setFileUrl] = useState(null);
+  const [formInput, updateFormInput] = useState({
+    price: "",
+    name: "",
+    description: "",
+  });
   const [loadingState, setLoadingState] = useState("not-loaded");
   const router = useRouter();
   console.log(nfts)
@@ -63,23 +69,11 @@ export default function MyAssets() {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    /* next, create the item */
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-    let transaction = await contract.createToken(nft.image);
-    let tx = await transaction.wait();
-    let event = tx.events[0];
-    let value = event.args[2];
-    let tokenId = value.toNumber();
-    const price = ethers.utils.parseUnits("10", "ether");
-
-    // const price = ethers.utils.parseUnits(formInput.price, "ether");
-
-    /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
     let listingPrice = await contract.getListingPrice();
     listingPrice = listingPrice.toString();
 
-    transaction = await contract.createMarketItem(nftaddress, tokenId, price, {
+    transaction = await contract.createMarketItem(nftaddress, nft.tokenId, nft.price, {
       value: listingPrice,
     });
     await transaction.wait();
