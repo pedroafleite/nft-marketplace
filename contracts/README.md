@@ -2,7 +2,7 @@
 
 Each NFT has two ids: the `tokenId` and the `itemId`, which are not in lockstep.
 
-`tokenId` is generated when the NFT is created on the `NFT.sol` contract.
+`tokenId` is generated when the NFT is created via the `NFT.sol` contract.
 
 `itemId` is generated when the NFT created is put on sale via the `Market.sol` contract.
 
