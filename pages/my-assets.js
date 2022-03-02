@@ -63,11 +63,23 @@ export default function MyAssets() {
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="py-10 px-20 text-3xl flex justify-center">No assets owned</h1>;
 
+  
+
   async function createSale(nft) {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
+
+    /* Here, instead of creating a new NFT, we should list the properties of 
+    the NFT that is already created and use only the Market contract. 
+    Therefore, we should change the following lines */
+    // let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    // let transaction = await contract.createToken(url);
+    // let tx = await transaction.wait();
+    // let event = tx.events[0];
+    // let value = event.args[2];
+    // let tokenId = value.toNumber();
 
     let contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
     let listingPrice = await contract.getListingPrice();
