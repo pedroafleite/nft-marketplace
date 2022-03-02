@@ -178,5 +178,7 @@
       idToMarketItem[itemId].owner = payable(msg.sender);
       _itemsSold.increment();
       payable(owner).transfer(listingPrice);
-}
+    }
+
+    
   }
